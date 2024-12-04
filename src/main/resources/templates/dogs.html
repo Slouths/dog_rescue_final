@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Available Dogs</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <header>
+        <h1>Available Dogs</h1>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </header>
+    
+    <div class="dog-grid">
+        <div th:each="dog : ${dogs}" class="dog-card">
+            <img th:if="${dog.imageUrl}" th:src="${dog.imageUrl}" alt="Dog Image">
+            <h3 th:text="${dog.name}"></h3>
+            <p th:text="${dog.breed}"></p>
+            <p th:text="${dog.size}"></p>
+            <p th:text="${'Age: ' + dog.age + ' years'}"></p>
+            <p th:text="${dog.description}"></p>
+        </div>
+    </div>
+</body>
+</html> 
