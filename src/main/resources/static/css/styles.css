@@ -18,12 +18,11 @@
 }
 
 .error-message {
-    color: red;
-    background-color: #ffeeee;
-    border: 1px solid red;
+    background-color: #ffebee;
+    color: #c62828;
     padding: 10px;
-    margin-bottom: 15px;
     border-radius: 4px;
+    margin-bottom: 15px;
     text-align: center;
 }
 
@@ -243,12 +242,11 @@ button[type="submit"]:hover {
 }
 
 .success-message {
-    color: #4CAF50;
     background-color: #e8f5e9;
-    border: 1px solid #4CAF50;
+    color: #2e7d32;
     padding: 10px;
-    margin-bottom: 15px;
     border-radius: 4px;
+    margin-bottom: 15px;
     text-align: center;
 }
 

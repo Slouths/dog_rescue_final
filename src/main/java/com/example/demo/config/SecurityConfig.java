@@ -7,47 +7,43 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.example.demo.security.CustomAuthenticationFailureHandler;
+import com.example.demo.security.CustomAuthenticationSuccessHandler;
+import com.example.demo.security.IpBlockFilter;
+import com.example.demo.service.LoginAttemptService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final UserDetailsService userDetailsService;
+    private final CustomAuthenticationFailureHandler failureHandler;
+    private final CustomAuthenticationSuccessHandler successHandler;
+    private final LoginAttemptService loginAttemptService;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public SecurityConfig(CustomAuthenticationFailureHandler failureHandler,
+                        CustomAuthenticationSuccessHandler successHandler,
+                        LoginAttemptService loginAttemptService) {
+        this.failureHandler = failureHandler;
+        this.successHandler = successHandler;
+        this.loginAttemptService = loginAttemptService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/login", "/register").permitAll()
-                .requestMatchers("/", "/adoption", "/donation").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/", true)
-                .failureUrl("/login?error")
-                .usernameParameter("username")
-                .passwordParameter("password")
                 .permitAll()
+                .failureHandler(failureHandler)
+                .successHandler(successHandler)
             )
-            .logout(logout -> logout
-                .logoutSuccessUrl("/login")
-                .permitAll()
-            )
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**")
-            )
-            .headers(headers -> headers
-                .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
-            )
-            .userDetailsService(userDetailsService);
+            .addFilterBefore(new IpBlockFilter(loginAttemptService), 
+                           UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
