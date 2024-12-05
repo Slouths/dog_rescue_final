@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Rescue - Submit a Success Story</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <nav class="navigation">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/adoption">Adoption</a>
+            <a href="/donation">Donation</a>
+            <a href="/submitstory" class="active">Submit A Success Story</a>
+        </div>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+
+    <div class="hero-section">
+        <h1>Submit Your Success Story</h1>
+        <p>Share your adoption journey to inspire others.</p>
+    </div>
+
+    <div class="form-section">
+        <form id="successStoryForm" th:action="@{/submitstory}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="story">Your Story:</label>
+                <textarea id="story" name="story" rows="6" placeholder="Write your adoption success story here..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="photo">Upload a Photo of Your Dog:</label>
+                <input type="file" id="photo" name="photo" accept=".jpg, .png" required>
+                <img id="preview" src="#" alt="Photo Preview" style="display:none;">
+            </div>
+            <button type="submit">Submit</button>
+            <p class="message" id="message"></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('photo').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('successStoryForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const story = document.getElementById('story').value.trim();
+            const photo = document.getElementById('photo').files[0];
+
+            if (!story || !photo) {
+                alert('Please complete all fields.');
+                return;
+            }
+
+            const message = document.getElementById('message');
+            message.textContent = 'Thank you for submitting your story! It has been sent for approval.';
+        });
+    </script>
+</body>
+</html>
