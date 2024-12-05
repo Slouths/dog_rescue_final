@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.List;
 
 @Service
 public class SuccessStoryServiceImpl implements SuccessStoryService {
@@ -42,5 +43,47 @@ public class SuccessStoryServiceImpl implements SuccessStoryService {
         } catch (Exception e) {
             throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void saveInitialStory(SuccessStory story, String photoFileName) {
+        story.setPhotoPath(photoFileName);
+        successStoryRepository.save(story);
+    }
+
+    @Override
+    public List<SuccessStory> getApprovedStories() {
+        return successStoryRepository.findByApprovedTrueOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public List<SuccessStory> getPendingStories() {
+        return successStoryRepository.findByApprovedFalseOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public void approveStory(Long id) {
+        SuccessStory story = successStoryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Story not found"));
+        story.setApproved(true);
+        successStoryRepository.save(story);
+    }
+
+    @Override
+    public void rejectStory(Long id) {
+        successStoryRepository.deleteById(id);
+    }
+
+    @Override
+    public SuccessStory getStoryById(Long id) {
+        return successStoryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Story not found"));
+    }
+
+    @Override
+    public void updateStory(Long id, String storyText) {
+        SuccessStory story = getStoryById(id);
+        story.setStory(storyText);
+        successStoryRepository.save(story);
     }
 } 

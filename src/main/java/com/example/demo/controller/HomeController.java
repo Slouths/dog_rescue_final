@@ -34,9 +34,4 @@ public class HomeController {
     public String donation() {
         return "donation";
     }
-
-    @GetMapping("/submitstory")
-    public String submitStory() {
-        return "submitstory";
-    }
 } 

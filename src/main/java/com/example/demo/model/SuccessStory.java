@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import java.time.LocalDateTime;
+import jakarta.persistence.PrePersist;
 
 @Entity
 public class SuccessStory {
@@ -17,6 +19,14 @@ public class SuccessStory {
     
     private String photoPath;
     private boolean approved;
+    
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -49,5 +59,13 @@ public class SuccessStory {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 } 
