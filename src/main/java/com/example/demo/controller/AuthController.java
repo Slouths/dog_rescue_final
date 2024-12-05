@@ -24,8 +24,20 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user) {
-        userService.registerNewUser(user);
-        return "redirect:/login";
+    public String registerUser(@ModelAttribute User user, Model model) {
+        try {
+            if (userService.existsByUsername(user.getUsername())) {
+                model.addAttribute("error", "Username already exists");
+                return "register";
+            }
+            
+            user.setEnabled(true);
+            userService.registerNewUser(user);
+            return "redirect:/login?registered";
+            
+        } catch (Exception e) {
+            model.addAttribute("error", "Registration failed: " + e.getMessage());
+            return "register";
+        }
     }
 } 
