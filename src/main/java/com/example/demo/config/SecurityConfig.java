@@ -31,11 +31,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/login", "/register").permitAll()
-                .anyRequest().authenticated()
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/h2-console/**")
             )
+            .headers(headers -> headers
+                .frameOptions().sameOrigin()
+            )
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+            .requestMatchers("/login", "/register").permitAll()
+            .requestMatchers("/h2-console/**").permitAll()
+            .requestMatchers("/api/submit-story").authenticated()
+            .anyRequest().authenticated()
+        )
             .formLogin(form -> form
                 .loginPage("/login")
                 .permitAll()

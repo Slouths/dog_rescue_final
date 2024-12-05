@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Dog Rescue - Submit a Success Story</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
@@ -56,7 +58,7 @@
     </div>
 
     <div class="form-section">
-        <form id="successStoryForm" th:action="@{/submitstory}" method="post" enctype="multipart/form-data">
+        <form id="successStoryForm" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="story">Your Story:</label>
                 <textarea id="story" name="story" rows="6" placeholder="Write your adoption success story here..." required></textarea>
@@ -105,8 +107,36 @@
                 return;
             }
 
-            const message = document.getElementById('message');
-            message.textContent = 'Thank you for submitting your story! It has been sent for approval.';
+            const formData = new FormData();
+            formData.append('story', story);
+            formData.append('photo', photo);
+
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch('/api/submit-story', {
+                method: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                const message = document.getElementById('message');
+                message.textContent = 'Thank you for submitting your story! It has been sent for approval.';
+                document.getElementById('successStoryForm').reset();
+                document.getElementById('preview').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting story. Please try again.');
+            });
         });
 
         function approveStory(id) {
@@ -181,7 +211,6 @@
             }
         }
 
-        // Get CSRF token
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
     </script>
