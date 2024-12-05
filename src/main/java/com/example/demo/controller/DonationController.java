@@ -25,7 +25,7 @@ public class DonationController {
             return ResponseEntity.badRequest().body("Card is expired");
         }
 
-        // Process the donation (you can add payment gateway logic here)
+        // Process the donation
         return ResponseEntity.ok("Donation processed successfully");
     }
 
