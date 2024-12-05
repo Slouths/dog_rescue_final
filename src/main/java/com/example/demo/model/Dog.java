@@ -23,4 +23,7 @@ public class Dog {
     private int age;
     private String description;
     private String imageUrl;
+    
+    @Column(nullable = false)
+    private boolean featured = false;
 } 

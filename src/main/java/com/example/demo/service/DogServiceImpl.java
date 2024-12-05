@@ -35,7 +35,7 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public List<Dog> getTopDogs() {
-        return dogRepository.findAll();
+    public List<Dog> getFeaturedDogs() {
+        return dogRepository.findByFeaturedTrue();
     }
 } 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dog Rescue - Home</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <nav class="navigation">
+        <div class="nav-links">
+            <a href="/" class="active">Home</a>
+            <a href="/adoption">Adoption</a>
+            <a href="/donation">Donation</a>
+        </div>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+
+    <div class="hero-section">
+        <h1>Welcome to Dog Rescue</h1>
+        <p>Find your perfect companion among our featured dogs</p>
+    </div>
+
+    <div class="featured-section">
+        <h2>Featured Dogs</h2>
+        <div class="dog-grid">
+            <div th:each="dog : ${featuredDogs}" class="dog-card">
+                <img th:if="${dog.imageUrl}" th:src="${dog.imageUrl}" alt="Dog Image">
+                <h3 th:text="${dog.name}"></h3>
+                <p th:text="${dog.breed}"></p>
+                <p th:text="${dog.size}"></p>
+                <p th:text="${'Age: ' + dog.age + ' years'}"></p>
+                <p class="description" th:text="${dog.description}"></p>
+                <a th:href="@{/adoption}" class="adopt-button">Learn More</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

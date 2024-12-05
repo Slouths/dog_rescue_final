@@ -8,5 +8,5 @@ public interface DogService {
     Dog findById(Long id);
     Dog save(Dog dog);
     void deleteById(Long id);
-    List<Dog> getTopDogs();
+    List<Dog> getFeaturedDogs();
 } 

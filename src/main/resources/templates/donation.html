@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dog Rescue - Donation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <nav class="navigation">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/adoption">Adoption</a>
+            <a href="/donation" class="active">Donation</a>
+        </div>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+
+    <div class="donation-container">
+        <h1>Support Our Mission</h1>
+        <p class="donation-intro">Your donation helps us provide care, shelter, and love to dogs in need.</p>
+
+        <div class="donation-options">
+            <div class="donation-tier">
+                <h3>Basic Support</h3>
+                <p class="amount">$25</p>
+                <p>Provides food and basic supplies for one dog for a week</p>
+                <button class="donate-button" onclick="processDonation(25)">Donate $25</button>
+            </div>
+
+            <div class="donation-tier">
+                <h3>Care Provider</h3>
+                <p class="amount">$50</p>
+                <p>Covers medical check-up and vaccinations</p>
+                <button class="donate-button" onclick="processDonation(50)">Donate $50</button>
+            </div>
+
+            <div class="donation-tier featured-tier">
+                <h3>Guardian Angel</h3>
+                <p class="amount">$100</p>
+                <p>Supports comprehensive care for one dog for a month</p>
+                <button class="donate-button" onclick="processDonation(100)">Donate $100</button>
+            </div>
+
+            <div class="donation-tier">
+                <h3>Custom Amount</h3>
+                <div class="custom-amount">
+                    <input type="number" id="customAmount" min="1" placeholder="Enter amount">
+                    <button class="donate-button" onclick="processDonation('custom')">Donate</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="donation-info">
+            <h2>How Your Donation Helps</h2>
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <h4>Medical Care</h4>
+                    <p>Provides veterinary care, medications, and surgeries when needed</p>
+                </div>
+                <div class="impact-item">
+                    <h4>Food & Supplies</h4>
+                    <p>Ensures our dogs have quality food, beds, toys, and other essentials</p>
+                </div>
+                <div class="impact-item">
+                    <h4>Shelter Operations</h4>
+                    <p>Helps maintain our facility and provide comfortable living spaces</p>
+                </div>
+                <div class="impact-item">
+                    <h4>Training & Care</h4>
+                    <p>Supports behavioral training and daily care activities</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        function processDonation(amount) {
+            let donationAmount = amount;
+            if (amount === 'custom') {
+                donationAmount = document.getElementById('customAmount').value;
+                if (!donationAmount || donationAmount <= 0) {
+                    alert('Please enter a valid donation amount');
+                    return;
+                }
+            }
+            // In a real application, this would connect to a payment processor
+            alert('Thank you for your donation of $' + donationAmount + '! This is a demo, no actual payment was processed.');
+        }
+    </script>
+</body>
+</html> 

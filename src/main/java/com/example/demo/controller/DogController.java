@@ -16,7 +16,7 @@ public class DogController {
 
     @GetMapping("/dogs")
     public String showDogs(Model model) {
-        List<Dog> dogs = dogService.getTopDogs();
+        List<Dog> dogs = dogService.getFeaturedDogs();
         model.addAttribute("dogs", dogs);
         return "dogs";
     }

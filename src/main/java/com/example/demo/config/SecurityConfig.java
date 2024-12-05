@@ -26,11 +26,12 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/login", "/register").permitAll()
+                .requestMatchers("/", "/adoption", "/donation").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/dogs", true)
+                .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error")
                 .usernameParameter("username")
                 .passwordParameter("password")
