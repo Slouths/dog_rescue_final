@@ -100,8 +100,26 @@
             document.getElementById('paymentForm').scrollIntoView({ behavior: 'smooth' });
         }
 
+        function validateExpiryDate() {
+            const expiryDateInput = document.getElementById('expiryDate').value;
+            const [month, year] = expiryDateInput.split('/').map(Number);
+
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1;
+            const currentYear = currentDate.getFullYear() % 100;
+
+            if (year < currentYear || (year === currentYear && month < currentMonth)) {
+                alert('The card has expired. Please use a valid card.');
+                return false;
+            }
+
+            return true;
+        }
+
         function processDonation(event) {
             event.preventDefault();
+            if (!validateExpiryDate) return;
+            
             // In a real application, this would connect to a payment processor
             alert('Thank you for your donation! This is a demo, no actual payment was processed.');
             document.getElementById('donationPaymentForm').reset();
