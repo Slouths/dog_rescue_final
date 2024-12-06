@@ -28,7 +28,7 @@ class DemoDatabaseTests {
 
         // Verify the password is encrypted in storage
         assertNotEquals("plainPassword123", savedUser.getPassword());
-        assertTrue(savedUser.getPassword().startsWith("$2a$")); // Assuming BCrypt
+        assertTrue(savedUser.getPassword().startsWith("$2a$")); // BCrypt
     }
 
     // Test Case 2: Verify Data Retrieval with Decryption (Sunny-Day)
