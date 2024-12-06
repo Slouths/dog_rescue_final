@@ -22,8 +22,8 @@ public class SecurityConfig {
     private final LoginAttemptService loginAttemptService;
 
     public SecurityConfig(CustomAuthenticationFailureHandler failureHandler,
-                        CustomAuthenticationSuccessHandler successHandler,
-                        LoginAttemptService loginAttemptService) {
+                          CustomAuthenticationSuccessHandler successHandler,
+                          LoginAttemptService loginAttemptService) {
         this.failureHandler = failureHandler;
         this.successHandler = successHandler;
         this.loginAttemptService = loginAttemptService;
@@ -57,28 +57,8 @@ public class SecurityConfig {
             .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
             )
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-            .requestMatchers("/login", "/register").permitAll()
-            .requestMatchers("/h2-console/**").permitAll()
-            .requestMatchers("/api/submit-story").authenticated()
-            .anyRequest().authenticated()
-        )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .permitAll()
-                .failureHandler(failureHandler)
-                .successHandler(successHandler)
-            )
-            .logout(logout -> logout
-            .logoutUrl("/logout") // Define the logout endpoint
-            .logoutSuccessUrl("/login") // Redirect after successful logout
-            .invalidateHttpSession(true) // Invalidate session on logout
-            .deleteCookies("JSESSIONID") // Delete session cookies
-            .permitAll()
-            )   
             .addFilterBefore(new IpBlockFilter(loginAttemptService), 
-                           UsernamePasswordAuthenticationFilter.class);
+                             UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
