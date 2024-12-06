@@ -82,6 +82,11 @@
     background-color: #f5f5f5;
 }
 
+.center-section {
+    text-align: center;
+    padding: 15rem 1rem;
+}
+
 .featured-section {
     padding: 2rem;
 }

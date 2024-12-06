@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dog Rescue - Adoption application</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <nav class="navigation">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/adoption"class="active">Adoption</a>
+            <a href="/donation">Donation</a>
+            <a href="/aboutUs">About Us</a>
+            
+        </div>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+
+    <div class="hero-section">
+        <h1>Application submission</h1>
+        
+        <div class="form-group">
+            <label>Use previous application?</label>
+            <button onclick="loadPreviousApplication()" class="adopt-button">Load Previous Application</button>
+        </div>
+
+        <form class="adoption-form" th:action="@{/adoptionApplication}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" th:value="${previousApplication?.name}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" th:value="${previousApplication?.email}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+                       placeholder="123-456-7890" th:value="${previousApplication?.phone}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="stateId">Upload State ID:</label>
+                <input type="file" id="stateId" name="stateId" accept="image/*" required>
+                <small>Please upload a clear image of your state-issued ID</small>
+                <div th:if="${previousApplication?.stateIdUrl}">
+                    <p>Previous ID uploaded: <span th:text="${previousApplication.stateIdUrl}"></span></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="additionalInfo">Why do you want to adopt a dog?</label>
+                <textarea id="additionalInfo" name="additionalInfo" rows="5" required
+                          placeholder="Please tell us about yourself and why you would be a great dog parent..."
+                          th:text="${previousApplication?.additionalInfo}"></textarea>
+            </div>
+            <style>
+                .form-group input.touched:invalid,
+                .form-group textarea.touched:invalid {
+                    border: 2px solid #ff4444;
+                    background-color: #fff0f0;
+                }
+
+                .form-group input.touched:focus:invalid,
+                .form-group textarea.touched:focus:invalid {
+                    outline-color: #ff4444;
+                }
+            </style>
+            <button type="submit" class="adopt-button">Submit Application</button>
+
+            <div th:if="${param.success}" class="success-message">
+                <p>Thank you for submitting your application! We will review it and contact you soon.</p>
+                <script>
+                    window.location.href = '/adoption';
+                </script>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function loadPreviousApplication() {
+            fetch('/api/previousApplication')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('name').value = data.name || '';
+                    document.getElementById('email').value = data.email || '';
+                    document.getElementById('phone').value = data.phone || '';
+                    document.getElementById('additionalInfo').value = data.additionalInfo || '';
+                })
+                .catch(error => console.error('Error loading previous application:', error));
+        }
+    </script>
+</body>
+</html>

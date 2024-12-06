@@ -34,4 +34,15 @@ public class HomeController {
     public String donation() {
         return "donation";
     }
+
+    @GetMapping("/adoptionApplication")
+    public String adoptionApplication() {
+        return "adoptionApplication";
+    }
+
+    @GetMapping("/aboutUs")
+    public String aboutUs() {
+        return "aboutUs";
+    }
+
 } 
