@@ -1,73 +1,90 @@
 
 # 🐾 Dog Rescue Website 🐶
-Welcome to the Dog Rescue Website repository! This project aims to create a platform that helps rescue dogs find loving homes, encourages donations, and supports community engagement through volunteering and success stories.
+A web application dedicated to helping dogs find their forever homes. 
+Users can browse adoptable dogs, filter by breed, submit adoption applications, 
+make donations, and share success stories.
 
-## 🚀 Project Overview
-Our website is designed to support the dog rescue mission by offering users an intuitive experience to:
+# Table of Contents
+- Features
+- Installation
+- Usage
+- Technologies Used
+- Contributing
+- License
+- Contact
 
-Adopt rescue dogs through a user-friendly adoption portal.
-Donate securely to support the organization.
-Volunteer for activities and help in various roles.
-Share and engage with success stories of adopted dogs.
-Each feature is crafted to enhance user experience and facilitate the organization's mission. The website includes security, accessibility, and user account management functionalities.
+## 🔍 Features
+### Core Features
+- **Browse Dogs**: View dogs available for adoption with detailed profiles.
+- **Filter by Breed**: Quickly find dogs by selecting a breed.
+- **Adoption Application**: Submit adoption applications online.
+- **Donation System**: Securely make donations via credit card.
+- **Success Stories**: Share and moderate success stories of adopted dogs.
 
-## 🔍 Key Features
+### Security Features
+- **Two-Factor Authentication**: Enhance account security.
+- **Data Encryption**: Protect sensitive user data.
+- **Secure Storage**: Store data safely with industry standards.
+- **Login Protection**: Limit login attempts to prevent brute-force attacks.
 
-### 🐕 Adoption Portal
-Browse Available Dogs: Filter by **breed, age, or size**.
-Dog Profiles: Detailed profiles with photos and descriptions.
-Adoption Application: Simple, secure form submission.
+## Installation
+### Prerequisites
+- Java 21+
+- Maven 3.9+
+- Spring Boot 3.4+
+- Node.js (if required for front-end assets)
+- H2 Database (or your choice of database)
 
-### 💸 Donation Platform
-Multiple Payment Options: One-time and recurring donations via credit cards and PayPal.
-Secure Transactions: Integrated with industry-standard payment gateways.
-Receipt Tracking: Automatic email receipts and donation history.
+### Steps to Install
+1.	Clone the repository:
+2.	git clone https://github.com/Slouths/dog_rescue_final.git
+3.	cd dog_rescue_final
+4.	Build the project:
+5.	mvn clean install
+6.	Run the application:
+7.	mvn spring-boot:run
+8.	Access the application at http://localhost:8080.
 
-### 🙋‍♂️ Volunteer Sign-Up
-Explore Roles: View available volunteer opportunities.
-Sign-Up Forms: Register for events and receive confirmation via email.
-Coordination Alerts: Notifications to the organization for quick volunteer engagement.
+# Usage
+- **Navigate the Home Page**: View featured dogs and browse the available sections.
+- **Filter Dogs**: Use the search filters to refine results by breed or size.
+- **Adopt a Dog**: Submit an adoption application directly on the dog's profile.
+- **Make a Donation**: Support the rescue by donating through a secure payment gateway.
+- **Share a Story**: Post a success story or read others’ experiences.
 
-### 🏆 Success Stories
-Share Adoption Stories: Submit and view heartwarming success stories of adopted dogs.
-Moderated Content: Admin approval before publication.
-Community Interaction: Comment and like features for enhanced engagement.
-🔧 How to Set Up Locally
-To get this project running locally, follow these steps:
+# Technologies Used
+- **Backend**: Spring Boot, Spring Security, Hibernate (JPA)
+- **Frontend**: Thymeleaf, HTML5, CSS3, JavaScript
+- **Database**: H2 (in-memory for testing, replaceable with MySQL/PostgreSQL)
+- **Build Tool**: Maven
+- **Version Control**: Git/GitHub
 
-## 📊 Admin Dashboard & Reporting
-Admins can:
+# Contributing
+We welcome contributions! Please follow these steps:
+1.	Fork the repository.
+2.	Create a feature branch:
+3.	git checkout -b feature/your-feature-name
+4.	Commit your changes:
+5.	git commit -m "Add your feature description here"
+6.	Push your changes:
+7.	git push origin feature/your-feature-name
+8.	Open a pull request and describe your changes.
 
-Manage Content: Approve success stories, view adoption requests, and track volunteer registrations.
-Generate Reports: View donation metrics, adoption rates, and website activity analytics.
-📱 Responsive & Accessible
-This website is designed with:
+# Contact
+Contact
+For questions or collaboration, feel free to reach out:
+### Team Members
+- Stefani Whisennand (Project Manager)
+- Nicholas Nunez
+- Daniel Cortina
+- Anthony Fernandez
+- Argelio Rodriguez
+- Guillermo Medina
+- Oleh Krainyk
+- Ashton Benson
 
-Cross-device compatibility: Optimized for mobile, tablet, and desktop.
-Web accessibility: Screen reader support, keyboard navigation, and descriptive alt-text.
-
-### 🛡️ Security Features
-Data Encryption: SSL for secure data transmission.
-User Authentication: Two-factor authentication and CAPTCHA for extra security.
-Fraud Prevention: Secure logins with brute-force prevention mechanisms.
-
-### 📈 Project Roadmap
-MVP Deliverables:
- Adoption portal with filtering and application forms.
- Donation platform with integrated payment gateways.
- Volunteer sign-up and notifications.
- Success stories submission and moderation.
-Future Enhancements:
- Add AI-based dog matching system.
- Implement a gamification system for volunteers (badges, rewards).
- Integrate social media sharing for success stories.
 
 ## 📜 License
 This project is licensed under the MIT [License](LICENSE.md).
 
 Feel free to explore, contribute, and help us in our mission to find every dog a forever home! ❤️
-
-## 📫 Contact
-For any questions or feedback, reach out at:
-
-Discord: Slouths
