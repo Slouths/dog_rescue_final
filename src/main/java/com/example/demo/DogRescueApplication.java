@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.context.annotation.Bean;
+import com.example.demo.service.TwoFactorAuthService;
 
 @SpringBootApplication
 @EntityScan("com.example.demo.model")
@@ -12,4 +14,5 @@ public class DogRescueApplication {
     public static void main(String[] args) {
         SpringApplication.run(DogRescueApplication.class, args);
     }
+
 } 

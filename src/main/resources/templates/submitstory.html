@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Dog Rescue - Submit a Success Story</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <nav class="navigation">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/adoption">Adoption</a>
+            <a href="/donation">Donation</a>
+            <a href="/submitstory" class="active">Submit A Success Story</a>
+        </div>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+
+    <div class="hero-section">
+        <h1>Submit Your Success Story</h1>
+        <p>Share your adoption journey to inspire others.</p>
+    </div>
+
+    <div class="success-stories-section">
+        <h2>Success Stories</h2>
+        <div class="story-grid">
+            <div th:each="story : ${approvedStories}" class="story-card">
+                <img th:src="@{'/uploads/stories/' + ${story.photoPath}}" alt="Success Story Photo">
+                <p class="story-text" th:text="${story.story}"></p>
+                <p class="story-date" th:text="${#temporals.format(story.createdAt, 'MMM dd, yyyy')}"></p>
+                <div sec:authorize="hasRole('ROLE_ADMIN')" class="moderation-buttons">
+                    <button th:onclick="'editStory(' + ${story.id} + ')'" class="edit-button">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div sec:authorize="hasRole('ROLE_ADMIN')" class="moderation-section">
+        <h2>Pending Stories</h2>
+        <div class="story-grid">
+            <div th:each="story : ${pendingStories}" class="story-card pending">
+                <img th:src="@{'/uploads/stories/' + ${story.photoPath}}" alt="Success Story Photo">
+                <p class="story-text" th:text="${story.story}"></p>
+                <p class="story-date" th:text="${#temporals.format(story.createdAt, 'MMM dd, yyyy')}"></p>
+                <div class="moderation-buttons">
+                    <button th:onclick="'editStory(' + ${story.id} + ')'" class="edit-button">Edit</button>
+                    <button th:onclick="'approveStory(' + ${story.id} + ')'" class="approve-button">Approve</button>
+                    <button th:onclick="'rejectStory(' + ${story.id} + ')'" class="reject-button">Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <form id="successStoryForm" th:action="@{/api/submit-story}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="story">Your Story:</label>
+                <textarea id="story" name="story" rows="6" placeholder="Write your adoption success story here..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="photo">Upload a Photo of Your Dog:</label>
+                <input type="file" id="photo" name="photo" accept=".jpg, .png" required>
+                <img id="preview" src="#" alt="Photo Preview" style="display:none;">
+            </div>
+            <button type="submit">Submit</button>
+            <p class="message" id="message"></p>
+        </form>
+    </div>
+
+    <div id="editModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Story</h2>
+            <textarea id="editStoryText" rows="6"></textarea>
+            <button onclick="saveEdit()" class="save-button">Save Changes</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('photo').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('successStoryForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const story = document.getElementById('story').value.trim();
+            const photo = document.getElementById('photo').files[0];
+
+            if (!story || !photo) {
+                alert('Please complete all fields.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('story', story);
+            formData.append('photo', photo);
+
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch('/api/submit-story', {
+                method: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                const message = document.getElementById('message');
+                message.textContent = 'Thank you for submitting your story! It has been sent for approval.';
+                document.getElementById('successStoryForm').reset();
+                document.getElementById('preview').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting story. Please try again.');
+            });
+        });
+
+        function approveStory(id) {
+            fetch(`/api/approve-story/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                }
+            })
+            .then(response => response.text())
+            .then(() => window.location.reload())
+            .catch(error => console.error('Error:', error));
+        }
+
+        function rejectStory(id) {
+            if (confirm('Are you sure you want to reject this story?')) {
+                fetch(`/api/reject-story/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    }
+                })
+                .then(response => response.text())
+                .then(() => window.location.reload())
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        let currentEditId = null;
+        const modal = document.getElementById('editModal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        function editStory(id) {
+            currentEditId = id;
+            fetch(`/api/story/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('editStoryText').value = data.story;
+                    modal.style.display = 'block';
+                });
+        }
+
+        function saveEdit() {
+            const storyText = document.getElementById('editStoryText').value;
+            const formData = new FormData();
+            formData.append('story', storyText);
+
+            fetch(`/api/edit-story/${currentEditId}`, {
+                method: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken
+                },
+                body: formData
+            })
+            .then(response => response.text())
+            .then(() => {
+                modal.style.display = 'none';
+                window.location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+    </script>
+</body>
+</html>

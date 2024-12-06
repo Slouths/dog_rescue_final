@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DogRepository extends JpaRepository<Dog, Long> {
     List<Dog> findByFeaturedTrue();
+    List<Dog> findByBreedContainingIgnoreCase(String breed);
+    List<Dog> findByBreedIn(List<String> breeds);
 } 

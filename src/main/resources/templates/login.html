@@ -8,7 +8,12 @@
     <div class="login-container">
         <h2>Login</h2>
         <div th:if="${param.error}" class="error-message">
-            Invalid username or password
+            <span th:if="${param.error[0] == 'blocked'}">
+                Account is temporarily blocked. Please try again in 1 minute.
+            </span>
+            <span th:if="${param.error[0] == 'invalid'}">
+                Invalid username or password. Attempts remaining: <span th:text="${attemptsRemaining}"></span>
+            </span>
         </div>
         <div th:if="${param.registered}" class="success-message">
             Registration successful! Please login.

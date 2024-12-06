@@ -4,6 +4,8 @@ import com.example.demo.model.Dog;
 import com.example.demo.model.User;
 import com.example.demo.service.DogService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.SuccessStoryService;
+import com.example.demo.model.SuccessStory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private SuccessStoryService successStoryService;
+
     // Lists of sample data
     private final List<String> dogNames = Arrays.asList(
         "Max", "Luna", "Charlie", "Bella", "Rocky", "Lucy", "Cooper", "Daisy", 
@@ -45,6 +50,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         initializeAdmin();
         initializeDogs();
+        initializeSuccessStories();
     }
 
     private void initializeAdmin() {
@@ -98,6 +104,22 @@ public class DataInitializer implements CommandLineRunner {
             }
             
             dogService.save(dog);
+        }
+    }
+
+    private void initializeSuccessStories() {
+        String[] stories = {
+            "We adopted Max last year and he has brought so much joy to our family. He loves playing with our kids and going for long walks in the park.",
+            "Luna was shy when we first got her, but now she's the most confident and loving dog. She's completely transformed our lives!",
+            "Charlie was a senior dog when we adopted him, but he still has so much love to give. He's the perfect companion for our quiet lifestyle.",
+            "Bella has become best friends with our cat and they're inseparable. We couldn't have asked for a better addition to our family."
+        };
+
+        for (int i = 0; i < stories.length; i++) {
+            SuccessStory story = new SuccessStory();
+            story.setStory(stories[i]);
+            story.setApproved(true);
+            successStoryService.saveInitialStory(story, "sample-success-" + (i + 1) + ".jpg");
         }
     }
 } 
