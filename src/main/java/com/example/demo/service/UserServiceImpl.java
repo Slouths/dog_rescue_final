@@ -75,4 +75,25 @@ public class UserServiceImpl implements UserService {
         }
         return save(user);
     }
-} 
+
+    /**
+     * Authenticates a user by comparing raw password with the stored encoded password.
+     * @param username The username of the user
+     * @param rawPassword The raw password entered by the user
+     * @return true if authentication succeeds, false otherwise
+     */
+    public boolean authenticate(String username, String rawPassword) {
+        User user = findByUsername(username);
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
+    /**
+     * This method is intentionally unsafe and only for testing unauthorized access attempts.
+     * In a real system, this would never expose raw password or encrypted password data.
+     * @param userId The ID of the user
+     * @return null to simulate secured systems where raw data isn't accessible
+     */
+    public String getRawPasswordFromDb(Long userId) {
+        return null; // Intentionally null to demonstrate protection of sensitive data
+    }
+}

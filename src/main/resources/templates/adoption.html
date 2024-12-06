@@ -20,6 +20,24 @@
     <div class="adoption-header">
         <h1>Adoption Portal</h1>
         <p>Find your perfect companion from our available dogs</p>
+        
+        <!-- Add breed filter form -->
+        <div class="breed-filter">
+            <form th:action="@{/adoption}" method="get" id="breedFilterForm">
+                <div class="breed-select">
+                    <select name="breeds" multiple id="breedSelect">
+                        <option th:each="breed : ${availableBreeds}" 
+                                th:value="${breed}" 
+                                th:text="${breed}"
+                                th:selected="${selectedBreeds != null && selectedBreeds.contains(breed)}">
+                        </option>
+                    </select>
+                </div>
+                <button type="submit">Filter</button>
+                <a th:href="@{/adoption}" class="clear-filter">Clear Filter</a>
+            </form>
+            <p th:if="${error}" class="error-message" th:text="${error}"></p>
+        </div>
     </div>
 
     <div class="dog-grid">

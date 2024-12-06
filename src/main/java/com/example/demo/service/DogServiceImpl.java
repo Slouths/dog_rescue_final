@@ -4,6 +4,7 @@ import com.example.demo.model.Dog;
 import com.example.demo.repository.DogRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DogServiceImpl implements DogService {
@@ -37,5 +38,26 @@ public class DogServiceImpl implements DogService {
     @Override
     public List<Dog> getFeaturedDogs() {
         return dogRepository.findByFeaturedTrue();
+    }
+
+    @Override
+    public List<Dog> findByBreeds(List<String> breeds) {
+        // Validate breeds
+        List<String> availableBreeds = getAllBreeds();
+        for (String breed : breeds) {
+            if (!availableBreeds.contains(breed)) {
+                throw new IllegalArgumentException("Invalid breed selected: " + breed);
+            }
+        }
+        return dogRepository.findByBreedIn(breeds);
+    }
+
+    @Override
+    public List<String> getAllBreeds() {
+        return dogRepository.findAll().stream()
+                .map(Dog::getBreed)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
     }
 } 
