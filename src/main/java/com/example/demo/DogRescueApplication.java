@@ -15,8 +15,4 @@ public class DogRescueApplication {
         SpringApplication.run(DogRescueApplication.class, args);
     }
 
-    @Bean
-    public TwoFactorAuthService twoFactorAuthService() {
-        return new TwoFactorAuthService();
-    }
 } 
