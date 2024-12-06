@@ -51,6 +51,13 @@ public class SecurityConfig {
                 .failureHandler(failureHandler)
                 .successHandler(successHandler)
             )
+            .logout(logout -> logout
+            .logoutUrl("/logout") // Define the logout endpoint
+            .logoutSuccessUrl("/login") // Redirect after successful logout
+            .invalidateHttpSession(true) // Invalidate session on logout
+            .deleteCookies("JSESSIONID") // Delete session cookies
+            .permitAll()
+            )   
             .addFilterBefore(new IpBlockFilter(loginAttemptService), 
                            UsernamePasswordAuthenticationFilter.class);
 

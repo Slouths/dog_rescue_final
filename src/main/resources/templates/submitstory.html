@@ -58,7 +58,7 @@
     </div>
 
     <div class="form-section">
-        <form id="successStoryForm" method="post" enctype="multipart/form-data">
+        <form id="successStoryForm" th:action="@{/api/submit-story}" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="story">Your Story:</label>
                 <textarea id="story" name="story" rows="6" placeholder="Write your adoption success story here..." required></textarea>

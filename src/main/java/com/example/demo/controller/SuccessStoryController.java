@@ -28,8 +28,11 @@ public class SuccessStoryController {
 
     @PostMapping("/api/submit-story")
     public ResponseEntity<String> submitStory(
-            @RequestParam("story") String story,
-            @RequestParam("photo") MultipartFile photo) {
+        @RequestParam(value = "story", required = false) String story,
+        @RequestParam(value = "photo", required = false) MultipartFile photo) {
+        if (story == null || story.isEmpty() || photo == null || photo.isEmpty()) {
+        return ResponseEntity.badRequest().body("Error submitting story: Required parameters are missing");
+        }
         try {
             SuccessStory successStory = new SuccessStory();
             successStory.setStory(story);
