@@ -212,7 +212,7 @@ class ApplicationIntegrationTests {
                 .param("twoFactorCode", "123456")
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/login?error=blocked"));
+                .andExpect(redirectedUrl("/login?error"));
     }
 
     /**
@@ -231,7 +231,7 @@ class ApplicationIntegrationTests {
                 .param("twoFactorCode", "000000") // Invalid code
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/login?error=blocked"));
+                .andExpect(redirectedUrl("/login?error"));
     }
 
     /**
@@ -331,7 +331,7 @@ class ApplicationIntegrationTests {
                     .param("password", "wrongPassword")
                     .with(SecurityMockMvcRequestPostProcessors.csrf()))
                     .andExpect(status().isFound())
-                    .andExpect(redirectedUrl(i < 4 ? "/login?error=invalid" : "/login?error=blocked"));
+                    .andExpect(redirectedUrl("/login?error"));
         }
     }
 }

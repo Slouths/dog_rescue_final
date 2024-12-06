@@ -36,7 +36,7 @@ public class DonationController {
 
     private boolean isCardExpired(String expiryDate) {
         // Implement logic to validate expiry date (MM/YY format)
-        // This is a basic example and should be enhanced for real-world applications
+        // This is a basic example
         String[] parts = expiryDate.split("/");
         if (parts.length != 2) {
             return true; // Invalid format
