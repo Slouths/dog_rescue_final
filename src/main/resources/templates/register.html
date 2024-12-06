@@ -5,23 +5,80 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-    <div class="login-container">
+    <!-- Initial Registration Form -->
+    <div id="registerForm" class="login-container">
         <h2>Register New Account</h2>
         <div th:if="${error}" class="error-message" th:text="${error}">
             Error message
         </div>
-        <form th:action="@{/register}" method="post">
+        <form th:action="@{/register}" method="post" id="registrationForm">
             <div class="form-group">
                 <input type="text" name="username" placeholder="Username" required>
             </div>
             <div class="form-group">
                 <input type="password" name="password" placeholder="Password" required>
             </div>
-            <button type="submit">Register</button>
+            <button type="submit">Continue</button>
         </form>
         <div class="register-link">
             <a href="/login">Back to Login</a>
         </div>
     </div>
+
+    <!-- Phone Number Form (Initially Hidden) -->
+    <div id="phoneForm" class="login-container" style="display: none;">
+        <h2>Phone Verification</h2>
+        <div class="form-info">Enter your phone number to receive a verification code</div>
+        <form th:action="@{/register/phone}" method="post" id="phoneNumberForm">
+            <div class="form-group">
+                <input type="tel" 
+                       name="phoneNumber" 
+                       placeholder="Phone Number"
+                       maxlength="10"
+                       pattern="[0-9]{10}"
+                       title="Please enter a valid 10-digit phone number"
+                       required>
+            </div>
+            <button type="submit">Send Code</button>
+        </form>
+        <div class="register-link">
+            <a href="/register">Back</a>
+        </div>
+    </div>
+
+    <!-- OTP Form (Initially Hidden) -->
+    <div id="otpForm" class="login-container" style="display: none;">
+        <h2>Enter Verification Code</h2>
+        <div class="form-info">Enter the code sent to your phone</div>
+        <form th:action="@{/register/verify}" method="post" id="otpVerificationForm">
+            <div class="form-group">
+                <input type="text" 
+                       name="otp" 
+                       placeholder="Enter Code"
+                       maxlength="6"
+                       pattern="[0-9]{6}"
+                       title="Please enter a valid 6-digit verification code"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                       required>
+            </div>
+            <button type="submit">Verify</button>
+        </form>
+        <div class="register-link">
+            <a href="#" id="resendCode">Resend Code</a>
+        </div>
+    </div>
 </body>
+<script>
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('phoneForm').style.display = 'block';
+    });
+
+    document.getElementById('phoneNumberForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('phoneForm').style.display = 'none';
+        document.getElementById('otpForm').style.display = 'block';
+    });
+</script>
 </html> 
