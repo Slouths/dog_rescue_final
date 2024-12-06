@@ -122,8 +122,7 @@
             event.preventDefault();
             if (!validateExpiryDate()) return;
             
-            // In a real application, this would connect to a payment processor
-            alert('Thank you for your donation! This is a demo, no actual payment was processed.');
+            alert('Thank you for your donation!');
             document.getElementById('donationPaymentForm').reset();
             document.getElementById('paymentForm').classList.add('hidden');
         }
