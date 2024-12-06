@@ -519,3 +519,45 @@ button[type="submit"]:hover {
     border: 1px solid #ddd;
     border-radius: 4px;
 }
+
+.breed-filter {
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+.breed-select {
+    margin-bottom: 15px;
+}
+
+.breed-select select {
+    width: 300px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.breed-filter button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.clear-filter {
+    color: #666;
+    text-decoration: none;
+    padding: 8px 16px;
+}
+
+.clear-filter:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #dc3545;
+    margin-top: 10px;
+}

@@ -9,4 +9,6 @@ public interface DogService {
     Dog save(Dog dog);
     void deleteById(Long id);
     List<Dog> getFeaturedDogs();
+    List<Dog> findByBreeds(List<String> breeds);
+    List<String> getAllBreeds();
 } 
