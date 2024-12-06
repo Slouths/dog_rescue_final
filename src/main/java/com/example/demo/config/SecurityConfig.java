@@ -32,7 +32,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-<<<<<<< HEAD
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
@@ -52,8 +51,6 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login")
                 .permitAll()
             )
-=======
->>>>>>> e034d85ab243823ea985c1a22ee80ec10701c086
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers("/h2-console/**")
             )
