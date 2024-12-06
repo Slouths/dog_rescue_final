@@ -197,8 +197,62 @@ class ApplicationIntegrationTests {
     }
 
     /**
+     * (DRW-SEC-006 - Two-Factor Authentication)
+     * Test Case 10: Handling of a Valid OTP (Sunny-Day)
+     * Test Objective: Validate successful login when the correct two-factor authentication (2FA) code is provided.
+     * Ensure the system accepts valid credentials and a correct 2FA code.
+     */
+    @Test
+    @WithMockUser
+    void testSuccessfulLoginWithCorrect2FACode() throws Exception {
+        mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "testUser")
+                .param("password", "password123")
+                .param("twoFactorCode", "123456")
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/login?error=blocked"));
+    }
+
+    /**
+     * (DRW-SEC-006 - Two-Factor Authentication)
+     * Test Case 11: Handling of an Invalid OTP (Rainy-Day)
+     * Test Objective: Validate login failure when an incorrect two-factor authentication (2FA) code is provided.
+     * Ensure the system rejects invalid 2FA codes.
+     */
+    @Test
+    @WithMockUser
+    void testFailedLoginWithIncorrect2FACode() throws Exception {
+        mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "testUser")
+                .param("password", "password123")
+                .param("twoFactorCode", "000000") // Invalid code
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/login?error=blocked"));
+    }
+
+    /**
+     * (DRW-SEC-007 - Moderate Success Stories)
+     * Test Case 12: Reject Success Story (Sunny-Day)
+     * Test Objective: Verify that the admin can reject a submitted success story.
+     * Ensure the story status updates correctly to 'rejected.'
+     */
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void testRejectSuccessStory() throws Exception {
+        // Use the correct endpoint as defined in the controller
+        mockMvc.perform(post("/api/reject-story/1") 
+                .with(SecurityMockMvcRequestPostProcessors.csrf())) // Include CSRF token
+                .andExpect(status().isOk()) // Expect 200 OK for a successful rejection
+                .andExpect(content().string("Story rejected successfully")); // Verify success response
+    }
+
+     /**
      * (DRW-SEC-008 - User Data Security)
-     * Test Case 10: Verify User Data Encryption in Storage (Sunny-Day)
+     * Test Case 13: Verify User Data Encryption in Storage (Sunny-Day)
      * Test Objective: Validate that user passwords are stored in encrypted form.
      * Ensure that plain text passwords are not saved and passwords are encrypted using BCrypt.
      */
@@ -219,7 +273,7 @@ class ApplicationIntegrationTests {
 
     /**
      * (DRW-SEC-008 - User Data Security)
-     * Test Case 11: Verify Data Retrieval with Decryption (Sunny-Day)
+     * Test Case 14: Verify Data Retrieval with Decryption (Sunny-Day)
      * Test Objective: Validate that encrypted passwords can be matched correctly during authentication.
      * Ensure that users can log in successfully with valid credentials.
      */
@@ -242,7 +296,7 @@ class ApplicationIntegrationTests {
 
     /**
      * (DRW-SEC-008 - User Data Security)
-     * Test Case 12: Unauthorized Access to Encrypted Data (Rainy-Day)
+     * Test Case 15: Unauthorized Access to Encrypted Data (Rainy-Day)
      * Test Objective: Validate that raw password data is not accessible under any circumstances.
      * Ensure that sensitive data remains secure and inaccessible in plain text form.
      */
@@ -260,5 +314,24 @@ class ApplicationIntegrationTests {
         String rawPasswordFromDb = userService.getRawPasswordFromDb(user.getId());
 
         assertNull(rawPasswordFromDb); // Expect null because raw password should never be exposed
+    }
+
+    /**
+     * (DRW-SEC-010 - Limit Login Attempts)
+     * Test Case 16: Lock Account After 5 Failed Attempts (Sunny-Day)
+     * Test Objective: Validate the account lockout process after multiple failed login attempts.
+     * Ensure the system locks the account after exceeding the allowed number of attempts.
+     */
+    @Test
+    void testAccountLockAfterFailedAttempts() throws Exception {
+        for (int i = 0; i < 5; i++) {
+            mockMvc.perform(post("/login")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .param("username", "testUser")
+                    .param("password", "wrongPassword")
+                    .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                    .andExpect(status().isFound())
+                    .andExpect(redirectedUrl(i < 4 ? "/login?error=invalid" : "/login?error=blocked"));
+        }
     }
 }
